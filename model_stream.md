@@ -2,7 +2,7 @@
 
 [TOC]
 
-<img src="/Users/fangjun/Downloads/model_stream_img/MS_Structure.jpg" alt="MS_Structure" style="zoom:80%;" />
+<img src="./model_stream_img/MS_Structure.jpg" alt="MS_Structure" style="zoom:80%;" />
 
 ## 一、数据对象
 
