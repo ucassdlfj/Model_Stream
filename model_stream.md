@@ -31,11 +31,10 @@ class IFS_PROPERTY_EXPORT  IFSDataObject
 		{
 		public:
 			IFSDataObject() { _type = IFS_UNDEFINED; }
-			IFSDataObject(IFSDataType type) { _type = type; } 
-			virtual             ~IFSDataObject() {} 		 
+			IFSDataObject(IFSDataType type) { _type = type;}
+			virtual             ~IFSDataObject() {}
 			virtual IFSDataObject* clone();
-			IFSDataObject(const IFSDataObject& obj);  
-
+			IFSDataObject(const IFSDataObject& obj);
 			virtual IFSDataObject& operator=(const IFSDataObject& obj); 
 			virtual bool operator==(const IFSDataObject& obj) const;
 			virtual bool operator!=(const IFSDataObject& obj) const;
@@ -178,17 +177,17 @@ class IFSSHARED_EXPORT IFSImage : public IFSData
 			cv::Mat&			  plane(int planeNr);                    // 获取某一通道图像
 			float*					plane(int x, int y);
 			std::string     toString(int x, int y); 
-			void						reserveSrcGmat(int s);                 // 创建s个的cv::cuda:GpuImage并且保存入_srcGpuList
+			void						reserveSrcGmat(int s);            // 创建s个的cv::cuda:GpuImage并且保存入_srcGpuList
 
 		
 			//==================current in ===================================// 
-			void						toCvMat(cv::Mat &src);                               // 获取cv::Mat,并且写入 _mat 属性成员中
+			void						toCvMat(cv::Mat &src);                         // 获取cv::Mat,并且写入 _mat 属性成员中
 			void						toCvMat(FS_SHAREPTR<std::vector<cv::Mat>> &srclist); // 获取 cv::Mat 的向量集合到 _matlist
 			FS_SHAREPTR< std::vector<cv::Mat>>  toMatSrclist();                  // 获取 _matlist
 
 			cv::Mat                     toCvMat(cv::Rect roi= cv::Rect(0, 0, 0, 0));                              // 获取对应ROI区域的_mat
 			cv::cuda::GpuMat            toGpuMat(int idx = 0, cv::Rect roi = cv::Rect(0, 0, 0, 0), int chn = -1); // 获取对应索引cv::cuda::GpuMat的ROI区域
-			cv::cuda::GpuMat            toResizeGpuMat(int idx , cv::Size size); // 对srcGpuMat中对应索引位置出的GpuMat惊醒resize操作
+			cv::cuda::GpuMat            toResizeGpuMat(int idx , cv::Size size); // 对srcGpuMat中对应索引位置出的GpuMat进行resize操作
 
 			cv::Rect					getSrcGpuRoi(int idx = 0);        // 回去对应索引的GpuMat的全局ROI区域
 			cv::Rect					getOriginalRoi();                 // 返回 _oldRoi                      
@@ -202,12 +201,12 @@ class IFSSHARED_EXPORT IFSImage : public IFSData
 			void						download(cv::Rect roi = cv::Rect(0, 0, 0, 0)); // 将_resulgpumat(GpuMat) 下载到 _resultmat 
 
 			//==================current ROI===================================// 
-			void						addROI(cv::Rect & roi);  // ROI系列操作，一般于目标检测中添加ROI，其他分类、分割模块的利用ROI区域进行推理
+			void						addROI(cv::Rect & roi);// ROI系列操作，一般于目标检测中添加ROI，其他分类、分割模块的利用ROI区域进行推理
 			void						addROI(FS_SHAREPTR<std::vector<cv::Rect>> & roiv); 
 			FS_SHAREPTR< std::vector<cv::Rect>> matROI(); 
 	
-			void						resetROI(); //重置ROI
-			void						resetAllMat(); //重置mat 数据
+			void						resetROI();      //重置ROI
+			void						resetAllMat();   //重置mat 数据
 			void						releaseAllMat(); //释放mat 数据
 			   
 
@@ -257,18 +256,19 @@ class IFSSHARED_EXPORT IFSImage : public IFSData
 			void						fnScalePaddSrcCpuMat(int idx); // 将cv::Mat对象进行缩放，上传到_srcGpuMatList内的对应索引GpuMat上
 			void						GetPaddingGPU(cv::cuda::GpuMat& srcImgTmp, cv::cuda::GpuMat& dstImg,  int paddsize,  int type );
 			void						GetPaddingCpu2GPU(cv::Mat& srcImg, cv::cuda::GpuMat& srcImgTmp, cv::cuda::GpuMat& dstImg, int paddsize, int type);   // 将CPU Image上传到 GPU Mat上
-			void						GetGpuMat(cv::cuda::GpuMat & src, cv::Rect & roi, int type, bool reset = false);  // 判断ROI区域和GpuMat大小，若GpuMat尺寸小于ROI，会重新创建一个更大的 GpuMat，并返回相应矩形区域
+			void						GetGpuMat(cv::cuda::GpuMat & src, cv::Rect & roi, int type, bool reset = false);  
+ 			// 判断ROI区域和GpuMat大小，若GpuMat尺寸小于ROI，会重新创建一个更大的 GpuMat，并返回相应矩形区域
 #endif
 			 
 			void						GetCpuMat(cv::Mat & src, cv::Rect & roi, int type, int initValue = 0, bool reset = false); // 同上GPUMat区域
-			void						AdjustRectPos(cv::Rect& Rect, const cv::Rect& RegionRect);                        // 以第二个区域为标准对第一个rect区域进行修正
+			void						AdjustRectPos(cv::Rect& Rect, const cv::Rect& RegionRect);// 以第二个区域为标准对第一个rect区域进行修正
 			void						AdjustRectInterSetion(cv::Rect& Rect, const cv::Rect& RegionRect); //求取交集
 		private:
 			// --------------global input base info ------------------- //
 			int               _width;
 			int               _height;
 			int               _nrOfPlanes;
-			int							  _readChanl;			//读取图的通道 
+			int							  _readChanl;			// 读取图的通道 
 			int							  _reservecap;		// 保存的GPUMat的个数
 			uchar*				    _rgb32;
 			static int        _instanceCount; // Image实例 计数静态变量
@@ -292,7 +292,7 @@ class IFSSHARED_EXPORT IFSImage : public IFSData
 
 			// --------------global out base info ------------------- //
 			cv::Mat						_resultmat;			// 采用cv::mat 进行数据传输, 处理后的图像数据，可用来转heatmap 
-			IFSProcess*					_proccess; 
+			IFSProcess*			  _proccess; 
 
 			// --------------global destract info ------------------- //
 			IFS_RS					_rsStatus;			// 整体结果  =1 NG ,= 0  OK 
@@ -326,31 +326,31 @@ class IFSSHARED_EXPORT IFSNetParmsGlobal :public IFSDataObject
 			*/
 		private:
 
-			FSDEVICETYPE					m_infer_mode;					  //推理模式，gpu，cpu等模式
-			std::string						m_software_pth;					//软件所在目录，exe所在目录
-			std::string						m_workspace_pth;				//工作区的主目录
-			std::string						m_trunk_pth;					  //工作区trunk 目录
-			std::string						m_imgoriginal_pth;			//工作区原图 目录
+			FSDEVICETYPE					m_infer_mode;			//推理模式，gpu，cpu等模式
+			std::string						m_software_pth;	  //软件所在目录，exe所在目录
+			std::string						m_workspace_pth;	//工作区的主目录
+			std::string						m_trunk_pth;			//工作区trunk 目录
+			std::string						m_imgoriginal_pth;//工作区原图 目录
 
 
 			//tag 标注
-			std::string						m_tag_main_pth;					//标注的主目录     \datas\trunk\tagdata
-			std::string						m_tag_dat_pth;					//原始标注文件目录 \datas\trunk\tagdata\dat
-			std::string						m_tag_defect_pth;				//像素标注，\datas\trunk\tagdata\defectlib
-			std::string						m_tag_points_pth;				//点集标注，比如目标识别框 \datas\trunk\tagdata\points
-			std::string						m_tag_sample_pth;				//打标，比如分类，\datas\trunk\tagdata\tagsample
+			std::string						m_tag_main_pth;		//标注的主目录     \datas\trunk\tagdata
+			std::string						m_tag_dat_pth;		//原始标注文件目录 \datas\trunk\tagdata\dat
+			std::string						m_tag_defect_pth;	//像素标注，\datas\trunk\tagdata\defectlib
+			std::string						m_tag_points_pth; //点集标注，比如目标识别框 \datas\trunk\tagdata\points
+			std::string						m_tag_sample_pth;	//打标，比如分类，\datas\trunk\tagdata\tagsample
 
 
 			//ms 模型流
-			std::string						m_ms_main_pth;						//模型流主目录 datas\trunk\msdata\分割
-			std::string						m_ms_models_pth;					//模型流训练目录 datas\trunk\msdata\分割\models
-			std::string						m_ms_results_pth;					//模型流结果目录 datas\trunk\msdata\分割\results
-			std::string						m_ms_roi_mask_pth;					//模型流roi_mask目录 datas\trunk\msdata\分割\roi_mask
-			std::string						m_ms_reports_pth;					//模型流报表目录 datas\trunk\msdata\分割\reports
-			std::string						m_ms_sample_pth;					//模型流样本目录 datas\trunk\msdata\分割\sample
+			std::string						m_ms_main_pth;		//模型流主目录 datas\trunk\msdata\分割
+			std::string						m_ms_models_pth;	//模型流训练目录 datas\trunk\msdata\分割\models
+			std::string						m_ms_results_pth;	//模型流结果目录 datas\trunk\msdata\分割\results
+			std::string						m_ms_roi_mask_pth;//模型流roi_mask目录 datas\trunk\msdata\分割\roi_mask
+			std::string						m_ms_reports_pth;	//模型流报表目录 datas\trunk\msdata\分割\reports
+			std::string						m_ms_sample_pth;	//模型流样本目录 datas\trunk\msdata\分割\sample
 			
-			std::string						m_ms_uuid;							//模型流uuid
-			std::string						m_ms_node_uuid;						//模型流节点uuid
+			std::string						m_ms_uuid;				//模型流uuid
+			std::string						m_ms_node_uuid;		//模型流节点uuid
 		};
 ```
 
@@ -505,8 +505,8 @@ class  IFS_PROPERTY_EXPORT IFSProcessProperty
 			IFSMSRunMode  msRunMode() const { return _msRunMode; }
 			IFSPropWidgetType  propWidget() const { return _propWidget; }
 
-			virtual const char* type() const = 0;             // 属性名称
-			virtual SerializedData serialize() const = 0;     // 序列化后的数据
+			virtual const char* type() const = 0;           // 属性名称
+			virtual SerializedData serialize() const = 0;   // 序列化后的数据
 			virtual void deserialize(const SerializedData &data) = 0; // 反序列化
 			virtual IFSProcessProperty *clone() const = 0; // 
 			virtual void resetValue() = 0;
@@ -540,9 +540,9 @@ class  IFS_PROPERTY_EXPORT IFSProcessProperty
 */ 
 enum IFSMSRunMode
 		{
-			IFS_TRAINING = 0,			  // 训练模式
-			IFS_INFERENCE = 1,			// 推理模式
-			IFS_CONDITION = 2,			// 条件参数
+			IFS_TRAINING = 0,		// 训练模式
+			IFS_INFERENCE = 1,	// 推理模式
+			IFS_CONDITION = 2,  // 条件参数
 			IFS_NONE = 3
 		};
 /* 模型流组件类型，界面上如何展示，滑块， */
@@ -601,11 +601,11 @@ enum IFSProcessWidgetType
 */
 enum IFSPropWidgetType
 		{
-			IFS_PRIVATE = 0,			     // 私有的参数
-			IFS_PUBLIC = 1,				      //公共的参数，显示在公共区域，
-			IFS_ALLSHOW_NOEIDT_TRA = 2,	//两种模式下都显示，训练参数不可编辑
-			IFS_ALLSHOW_NOEIDT_INF = 3,	//两种模式下都显示，推理参数不可编辑
-			IFS_PROTECTED = 4			//
+			IFS_PRIVATE = 0,			      // 私有的参数
+			IFS_PUBLIC = 1,				      // 公共的参数，显示在公共区域，
+			IFS_ALLSHOW_NOEIDT_TRA = 2,	// 两种模式下都显示，训练参数不可编辑
+			IFS_ALLSHOW_NOEIDT_INF = 3,	// 两种模式下都显示，推理参数不可编辑
+			IFS_PROTECTED = 4,
 		};
 ```
 
@@ -635,10 +635,10 @@ class  IFS_PROPERTY_EXPORT IFSProcessPropertyInt : public IFSProcessProperty
 			IFSProcessProperty *clone() const;
 
 		private:
-			int _min;                         //!< min value
-			int _max;                         //!< max value
-			int _value;                       //!< current value
-			int _default;                     //!< default value
+			int _min;             //!< min value
+			int _max;             //!< max value
+			int _value;           //!< current value
+			int _default;         //!< default value
 		};
 ```
 
@@ -806,36 +806,34 @@ struct IFS_PROPERTY_EXPORT IFSProcessMessage
 
 		//属性添加 控件添加
 		public:			
-			void          addInput(std::string name, IFSDataType type, IFSMSRunMode _msRunMode = IFSMSRunMode::IFS_NONE);
-			void          addOutput(std::string name, IFSDataType type, IFSMSRunMode _msRunMode = IFSMSRunMode::IFS_NONE);
-			void          addProcessPropertyInt(const char* name, const char* title, const char* description, int value, IFSProcessWidgetType widget = IFS_WIDGET_DEFAULT, int min = 0, int max = 0, IFSMSRunMode _msRunMode = IFSMSRunMode::IFS_NONE, IFSPropWidgetType propWidget = IFS_PRIVATE);
-			void          addProcessPropertyUnsignedInt(const char* name, const char* title, const char* description, unsigned int value, IFSProcessWidgetType widget = IFS_WIDGET_DEFAULT, unsigned int min = 0, unsigned int max = 0, IFSMSRunMode _msRunMode = IFSMSRunMode::IFS_NONE, IFSPropWidgetType propWidget = IFS_PRIVATE);
-			void          addProcessPropertyDouble(const char* name, const char* title, const char* description, double value, IFSProcessWidgetType widget = IFS_WIDGET_DEFAULT, double min = 0.0, double max = 0.0, IFSMSRunMode _msRunMode = IFSMSRunMode::IFS_NONE, IFSPropWidgetType propWidget = IFS_PRIVATE);
-			void          addProcessPropertyFloat(const char* name, const char* title, const char* description, float value, IFSProcessWidgetType widget = IFS_WIDGET_DEFAULT, float min = 0.0f, float max = 0.0f, IFSMSRunMode _msRunMode = IFSMSRunMode::IFS_NONE, IFSPropWidgetType propWidget = IFS_PRIVATE);
-
-			void                    addProcessPropertyBool(const char* name, const char* title, const char* description, bool value, IFSProcessWidgetType widget = IFS_WIDGET_DEFAULT, IFSMSRunMode _msRunMode = IFSMSRunMode::IFS_NONE, IFSPropWidgetType propWidget = IFS_PRIVATE);
-			void                    addProcessPropertyBoolOneShot(const char* name, const char* title, const char* description, bool value, IFSProcessWidgetType widget = IFS_WIDGET_DEFAULT, IFSMSRunMode _msRunMode = IFSMSRunMode::IFS_NONE, IFSPropWidgetType propWidget = IFS_PRIVATE);
-			void                    addProcessPropertyString(const char* name, const char* title, const char* description, const std::string &value, IFSProcessWidgetType widget = IFS_WIDGET_DEFAULT, IFSMSRunMode _msRunMode = IFSMSRunMode::IFS_NONE, IFSPropWidgetType propWidget = IFS_PRIVATE);
-			void                    addProcessPropertyVectorInt(const char* name, const char* title, const char* description, const std::vector<int> &value, IFSProcessWidgetType widget = IFS_WIDGET_DEFAULT, IFSMSRunMode _msRunMode = IFSMSRunMode::IFS_NONE, IFSPropWidgetType propWidget = IFS_PRIVATE);
-			void                    addProcessPropertyVectorDouble(const char* name, const char* title, const char* description, const std::vector<double> &value, IFSProcessWidgetType widget = IFS_WIDGET_DEFAULT, IFSMSRunMode _msRunMode = IFSMSRunMode::IFS_NONE, IFSPropWidgetType propWidget = IFS_PRIVATE);
-			void                    addProcessPropertyColor(const char* name, const char* title, const char* description, const IFSColor &value, IFSProcessWidgetType widget = IFS_WIDGET_DEFAULT, IFSMSRunMode _msRunMode = IFSMSRunMode::IFS_NONE, IFSPropWidgetType propWidget = IFS_PRIVATE);
-			void                    addProcessPropertyPoint(const char* name, const char* title, const char* description, const IFSPoint &value, IFSProcessWidgetType widget = IFS_WIDGET_DEFAULT, IFSMSRunMode _msRunMode = IFSMSRunMode::IFS_NONE, IFSPropWidgetType propWidget = IFS_PRIVATE);
-
-			void                    addProcessPropertyVectorControl(const char* name, const char* title, const char* description, const std::vector<IFSControls> &value, IFSProcessWidgetType widget = IFS_WIDGET_DEFAULT, IFSMSRunMode _msRunMode = IFSMSRunMode::IFS_NONE, IFSPropWidgetType propWidget = IFS_PRIVATE);
+			void addInput(std::string name, IFSDataType type, IFSMSRunMode _msRunMode = IFSMSRunMode::IFS_NONE);
+			void addOutput(std::string name, IFSDataType type, IFSMSRunMode _msRunMode = IFSMSRunMode::IFS_NONE);
+			void addProcessPropertyInt(const char* name, const char* title, const char* description, int value, IFSProcessWidgetType widget = IFS_WIDGET_DEFAULT, int min = 0, int max = 0, IFSMSRunMode _msRunMode = IFSMSRunMode::IFS_NONE, IFSPropWidgetType propWidget = IFS_PRIVATE);
+			void addProcessPropertyUnsignedInt(const char* name, const char* title, const char* description, unsigned int value, IFSProcessWidgetType widget = IFS_WIDGET_DEFAULT, unsigned int min = 0, unsigned int max = 0, IFSMSRunMode _msRunMode = IFSMSRunMode::IFS_NONE, IFSPropWidgetType propWidget = IFS_PRIVATE);
+			void addProcessPropertyDouble(const char* name, const char* title, const char* description, double value, IFSProcessWidgetType widget = IFS_WIDGET_DEFAULT, double min = 0.0, double max = 0.0, IFSMSRunMode _msRunMode = IFSMSRunMode::IFS_NONE, IFSPropWidgetType propWidget = IFS_PRIVATE);
+			void addProcessPropertyFloat(const char* name, const char* title, const char* description, float value, IFSProcessWidgetType widget = IFS_WIDGET_DEFAULT, float min = 0.0f, float max = 0.0f, IFSMSRunMode _msRunMode = IFSMSRunMode::IFS_NONE, IFSPropWidgetType propWidget = IFS_PRIVATE);
+			void addProcessPropertyBool(const char* name, const char* title, const char* description, bool value, IFSProcessWidgetType widget = IFS_WIDGET_DEFAULT, IFSMSRunMode _msRunMode = IFSMSRunMode::IFS_NONE, IFSPropWidgetType propWidget = IFS_PRIVATE);
+			void addProcessPropertyBoolOneShot(const char* name, const char* title, const char* description, bool value, IFSProcessWidgetType widget = IFS_WIDGET_DEFAULT, IFSMSRunMode _msRunMode = IFSMSRunMode::IFS_NONE, IFSPropWidgetType propWidget = IFS_PRIVATE);
+			void addProcessPropertyString(const char* name, const char* title, const char* description, const std::string &value, IFSProcessWidgetType widget = IFS_WIDGET_DEFAULT, IFSMSRunMode _msRunMode = IFSMSRunMode::IFS_NONE, IFSPropWidgetType propWidget = IFS_PRIVATE);
+			void addProcessPropertyVectorInt(const char* name, const char* title, const char* description, const std::vector<int> &value, IFSProcessWidgetType widget = IFS_WIDGET_DEFAULT, IFSMSRunMode _msRunMode = IFSMSRunMode::IFS_NONE, IFSPropWidgetType propWidget = IFS_PRIVATE);
+			void addProcessPropertyVectorDouble(const char* name, const char* title, const char* description, const std::vector<double> &value, IFSProcessWidgetType widget = IFS_WIDGET_DEFAULT, IFSMSRunMode _msRunMode = IFSMSRunMode::IFS_NONE, IFSPropWidgetType propWidget = IFS_PRIVATE);
+			void addProcessPropertyColor(const char* name, const char* title, const char* description, const IFSColor &value, IFSProcessWidgetType widget = IFS_WIDGET_DEFAULT, IFSMSRunMode _msRunMode = IFSMSRunMode::IFS_NONE, IFSPropWidgetType propWidget = IFS_PRIVATE);
+			void addProcessPropertyPoint(const char* name, const char* title, const char* description, const IFSPoint &value, IFSProcessWidgetType widget = IFS_WIDGET_DEFAULT, IFSMSRunMode _msRunMode = IFSMSRunMode::IFS_NONE, IFSPropWidgetType propWidget = IFS_PRIVATE);
+			void addProcessPropertyVectorControl(const char* name, const char* title, const char* description, const std::vector<IFSControls> &value, IFSProcessWidgetType widget = IFS_WIDGET_DEFAULT, IFSMSRunMode _msRunMode = IFSMSRunMode::IFS_NONE, IFSPropWidgetType propWidget = IFS_PRIVATE);
 
 			//更新
-			bool					updateProcessPropertyInt(const char* name, int value);
-			bool					updateProcessPropertyUnsignedInt(const char* name, unsigned int value);
-			bool					updateProcessPropertyDouble(const char* name, double value);
-			bool					updateProcessPropertyFloat(const char* name, float value);
-			bool					updateProcessPropertyBool(const char* name, bool value);
-			bool					updateProcessPropertyBoolOneShot(const char* name, bool value);
-			bool					updateProcessPropertyString(const char* name, const std::string &value);
-			bool					updateProcessPropertyVectorInt(const char* name, const std::vector<int> &value);
-			bool					updateProcessPropertyVectorDouble(const char* name, const std::vector<double> &value);
-			bool					updateProcessPropertyColor(const char* name, const IFSColor &value);
-			bool					updateProcessPropertyPoint(const char* name, const IFSPoint &value);
-			bool					updateProcessPropertyVectorControl(const char* name, const std::vector<IFSControls> &value);
+			bool updateProcessPropertyInt(const char* name, int value);
+			bool updateProcessPropertyUnsignedInt(const char* name, unsigned int value);
+			bool updateProcessPropertyDouble(const char* name, double value);
+			bool updateProcessPropertyFloat(const char* name, float value);
+			bool updateProcessPropertyBool(const char* name, bool value);
+			bool updateProcessPropertyBoolOneShot(const char* name, bool value);
+			bool updateProcessPropertyString(const char* name, const std::string &value);
+			bool updateProcessPropertyVectorInt(const char* name, const std::vector<int> &value);
+			bool updateProcessPropertyVectorDouble(const char* name, const std::vector<double> &value);
+			bool updateProcessPropertyColor(const char* name, const IFSColor &value);
+			bool updateProcessPropertyPoint(const char* name, const IFSPoint &value);
+			bool updateProcessPropertyVectorControl(const char* name, const std::vector<IFSControls> &value);
 
 
 			// 获取
@@ -846,7 +844,7 @@ struct IFS_PROPERTY_EXPORT IFSProcessMessage
 			bool                    getProcessPropertyBool(const char* name);
 			bool                    getProcessPropertyBoolOneShot(const char* name);
 			std::string             getProcessPropertyString(const char* name);
-			char*					getProcessPropertyChars(const char* name);
+			char*					          getProcessPropertyChars(const char* name);
 			std::vector<int>        getProcessPropertyVectorInt(const char* name);
 			std::vector<double>     getProcessPropertyVectorDouble(const char* name);
 			IFSColor                getProcessPropertyColor(const char* name);
@@ -964,7 +962,7 @@ class IFSSHARED_EXPORT IFSProcess : public IFSMSProperty
 			void							registerExecuteStepEventHandler(IFSExecuteStepEventHandler* handler);
 			void							notifyExeOneStepBeforHandler(IFSImage * image);
 			void							notifyExeOneStepAfterHandler(IFSImage * image);
-			void							notifyUpdateProcessMessages();//消息的通知
+			void							notifyUpdateProcessMessages(); //消息的通知
 			void							notifyProcessTrainMsg(IFSProcess*, IFSTrianingCurveSt& st);
 
 		protected: 
@@ -1219,7 +1217,7 @@ class FSAICOREINFER_EXPORTS FSTRTInference : public IFSInference {
 		} 
 		void SetBatchSize(int b);
 
-	/*	void AdjustRectPos(cv::Rect& Rect, const cv::Rect& RegionRect);
+	  /* void AdjustRectPos(cv::Rect& Rect, const cv::Rect& RegionRect);
 		void AdjustRectPos(cv::Rect& Rect, const cv::Mat& src);*/
 		void AdjustRectPaddScale(cv::Rect& Rect, int paddsize,int offx, int offy, float scal);
 
@@ -1285,8 +1283,8 @@ class IFSSHARED_EXPORT IFsnetEngineHandle {
 			virtual bool InitPulicProperty(IFSProcess* p)=0;
 			virtual bool Initialize(IFSProcess* p)=0;
 			virtual bool UnInitialize(IFSProcess* p)=0;
-			virtual	int  InitEngine(IFSProcess* p) = 0;				//创建引擎 
-			virtual	int  DestoryEngine(IFSProcess* p) = 0;			//销毁引擎  
+			virtual	int  InitEngine(IFSProcess* p) = 0;				// 创建引擎 
+			virtual	int  DestoryEngine(IFSProcess* p) = 0;		// 销毁引擎  
 			virtual int  DoInference(IFSImage * in, int indx, bool inferenceFisrt) = 0; // 推理  
 			virtual int  runPython(IFSProcess* p,IFSImage * in, void* callback) =0;     // 训练   
 			virtual bool GenFsConfig(IFSProcess* p, IFSImage * in, char * json) = 0;  //  生成fsconfig.json
@@ -1323,35 +1321,21 @@ class FSAICOREINFER_EXPORTS FsnetEngineHandle :public IFsnetEngineHandle {
 			 //写一个默认的操作，用户可以根据自己的需要，重写此方法
 			virtual bool Initialize(IFSProcess* p) override;
 			virtual bool UnInitialize(IFSProcess* p) override;
-
 			//写一个默认的操作，用户可以根据自己的需要，重写此方法
 			virtual int InitEngine(IFSProcess* p ) override;
-
-
 			virtual int DestoryEngine(IFSProcess* p) override;
-
-
 			virtual int DoInference(IFSImage * in, int indx, bool inferenceFisrt) override;
-
 			//写一个默认的操作，用户可以根据自己的需要，重写此方法
 			virtual int runPython(IFSProcess* p, IFSImage * in,   void* callback) override; // 训练  
 			virtual int runPython2(IFSProcess* p, IFSImage * in,   void* callback) override;// 切图 
-
-
+  
 			//写一个默认的操作，用户可以根据自己的需要，重写此方法
 			virtual bool GenFsConfig(IFSProcess* p, IFSImage * in, char * json) override; // 
 			virtual bool GenFsConfig2(IFSProcess* p, IFSImage * in, char * json) override; // 
-
 			virtual bool CheckModeFileExist(IFSProcess* p)  override;
-
 			virtual bool GetTrainValLoss(std::string &log, IFSTrianingCurveSt& st) override;
-
 			virtual bool checkParamsLegality(IFSProcess* p, IFSMSRunMode mode) ;
-
-
 			virtual int callpython(IFSProcess* p, const char* pyc, const char* json, void * callback) override;
-  
-
 		};
 ```
 
@@ -1363,7 +1347,6 @@ class FSAICOREINFER_EXPORTS FsnetEngineHandle :public IFsnetEngineHandle {
 
 ```c++
 class Fsnet11Handle :public FsnetEngineHandle {
-
 public:
 	Fsnet11Handle();
 	~Fsnet11Handle();
@@ -1583,7 +1566,7 @@ class IFSProcessDriver : public pugg::Driver
 
 #### 3.3、PluginsFsnet11Driver
 
-```
+```c++
 class PluginsFsnet11Driver : public IFSProcessDriver
 		{
 		public:
@@ -1818,34 +1801,23 @@ class  IFSSHARED_EXPORT IFSAlgOperEngine {
 		public:
 			IFSAlgOperEngine(IFSProcessFactory * factory, FS_SHAREPTR<FSAI::LOG::IFsaiLogger> logger);
 			~IFSAlgOperEngine();
-
 			//解析流程文件 
 			void readProcessFile(const char* proccessFile, int nCapID = 0, IFSEngineMsStruct *out = 0);
-
 			void readProcessJsonFile(const char* proccessFile, int nCapID = 0, IFSEngineMsStruct *out = 0);
-
 			//解析传入的结构体 
 			void readProcessFile(IFSEngineMsStruct *out, IFSMSRunMode mode, int nCapID = 0, bool init = false);
-
 			//执行
 			void execute(int nCapID, IFSImage * image, std::vector<int>  model_id_list, bool inferenceFisrt = false );
-
-
 			FS_SHAREPTR <std::map<int, IFSEngineMsStruct*>> getOPEREngineMap() const { return m_shRegOperAlgMap; }
-
 			//算子是否存在
 			bool CheckOperExist(int nAlgOperID);
-			 
 
 		private:
 			void execute(IFSEngineMsStruct* alg, std::vector<int>  model_id_list, IFSImage* image,  int nCapID, bool inferenceFisrt= false , bool forcedUpdate = true);
-
 			bool executeThread(IFSProcess* process, IFSImage* image = NULL, int inputIndex = 0, bool useOpenCV = false);
 			bool executeThreadJoin(IFSProcess* process, IFSImage* image = NULL, int inputIndex = 0, bool useOpenCV = false);
-
 			//进行队列 排序
 			void buildQueue(IFSEngineMsStruct* operAlg, IFSMSRunMode mode, int  nCapID, bool init = false);
-
 			void clearEngineSt(IFSEngineMsStruct* operAlg);
 
 		private:
@@ -1854,7 +1826,6 @@ class  IFSSHARED_EXPORT IFSAlgOperEngine {
 			IFSProcess* getProcessIns(int ID, std::vector<IFSProcess*>& process_list);
 			//获取toID
 			std::vector<int> getEdgesOuts(int fromID, std::vector<edges_st*>& edges_list);
-
 			//获取输入节点
 			int getEdgesIns(int fromID, IFSEngineMsStruct* operAlg,
 				std::vector<IFSMSObject*>& ins,
